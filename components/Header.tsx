@@ -1,5 +1,5 @@
 import React from 'react';
-import { Microscope, Bell, User, Settings, AlertCircle } from 'lucide-react';
+import { Microscope, Bell, User, Settings } from 'lucide-react';
 import { useSettings } from '../contexts/SettingsContext';
 
 interface HeaderProps {
@@ -10,6 +10,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onOpenGuide, currentView, onViewChange }) => {
   const { apiKey, setIsSettingsOpen } = useSettings();
+
   return (
     <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-teal-100 px-4 md:px-10 py-3 shadow-sm">
       <div className="max-w-[1600px] mx-auto flex items-center justify-between">
@@ -22,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenGuide, currentView, onViewChange 
           </div>
           <div className="flex flex-col">
             <h1 className="text-xl font-bold leading-none tracking-tight text-[#0D9488]">SimFinder AI</h1>
-            <p className="text-[10px] text-teal-700/70 font-medium uppercase tracking-wider hidden sm:block">App mô phỏng phát triển bởi thầy Trần Hoài Thanh</p>
+            <p className="text-[10px] text-teal-700/70 font-medium uppercase tracking-wider hidden sm:block">Mô phỏng khoa học thế hệ mới</p>
           </div>
         </div>
 
@@ -47,13 +48,6 @@ const Header: React.FC<HeaderProps> = ({ onOpenGuide, currentView, onViewChange 
           </button>
         </nav>
 
-        import {useSettings} from '../contexts/SettingsContext';
-        import {Settings, AlertCircle} from 'lucide-react';
-
-        // ... inside component ...
-        const {apiKey, setIsSettingsOpen} = useSettings();
-
-        // ... inside return ...
         <div className="flex items-center gap-4">
           <button
             onClick={() => setIsSettingsOpen(true)}
