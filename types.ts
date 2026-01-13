@@ -11,6 +11,13 @@ export interface Simulation {
   grade: string[];
 }
 
+export interface UploadedFile {
+  name: string;
+  type: 'image' | 'pdf' | 'text';
+  content: string; // base64 for image, text content for pdf/txt
+  mimeType: string;
+}
+
 export interface SearchParams {
   subject: string;
   topic: string;
@@ -19,6 +26,8 @@ export interface SearchParams {
   parameters?: string;
   expectedResult?: string;
   devices: string[];
+  // File upload
+  uploadedFiles?: UploadedFile[];
 }
 
 export interface AIResult {
@@ -38,7 +47,7 @@ export const SUBJECTS = [
 
 export const GRADES = [
   "Lớp 1", "Lớp 2", "Lớp 3", "Lớp 4", "Lớp 5",
-  "Lớp 6", "Lớp 7", "Lớp 8", "Lớp 9", 
+  "Lớp 6", "Lớp 7", "Lớp 8", "Lớp 9",
   "Lớp 10", "Lớp 11", "Lớp 12"
 ];
 
