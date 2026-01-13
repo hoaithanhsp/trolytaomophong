@@ -22,7 +22,7 @@ const Header: React.FC<HeaderProps> = ({ onOpenGuide, currentView, onViewChange 
           </div>
           <div className="flex flex-col">
             <h1 className="text-xl font-bold leading-none tracking-tight text-[#0D9488]">SimFinder AI</h1>
-            <p className="text-[10px] text-teal-700/70 font-medium uppercase tracking-wider hidden sm:block">Mô phỏng khoa học thế hệ mới</p>
+            <p className="text-[10px] text-teal-700/70 font-medium uppercase tracking-wider hidden sm:block">App mô phỏng phát triển bởi thầy Trần Hoài Thanh</p>
           </div>
         </div>
 
