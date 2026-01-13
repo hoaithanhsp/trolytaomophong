@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { Upload, X, FileText, Image, File, AlertCircle } from 'lucide-react';
+import { Upload, X, FileText, Image, File, AlertCircle, Sparkles, CheckCircle2 } from 'lucide-react';
 import { UploadedFile } from '../types';
 import * as pdfjsLib from 'pdfjs-dist';
 
@@ -55,7 +55,6 @@ const FileUploader: React.FC<FileUploaderProps> = ({
             const reader = new FileReader();
             reader.onload = () => {
                 const result = reader.result as string;
-                // Remove data URL prefix to get pure base64
                 const base64 = result.split(',')[1];
                 resolve(base64);
             };
@@ -174,9 +173,17 @@ const FileUploader: React.FC<FileUploaderProps> = ({
 
     const getFileIcon = (type: UploadedFile['type']) => {
         switch (type) {
-            case 'image': return <Image size={16} className="text-blue-500" />;
-            case 'pdf': return <FileText size={16} className="text-red-500" />;
-            case 'text': return <File size={16} className="text-gray-500" />;
+            case 'image': return <Image size={18} className="text-pink-500" />;
+            case 'pdf': return <FileText size={18} className="text-orange-500" />;
+            case 'text': return <File size={18} className="text-indigo-500" />;
+        }
+    };
+
+    const getFileTypeColor = (type: UploadedFile['type']) => {
+        switch (type) {
+            case 'image': return 'bg-pink-50 border-pink-200 text-pink-700';
+            case 'pdf': return 'bg-orange-50 border-orange-200 text-orange-700';
+            case 'text': return 'bg-indigo-50 border-indigo-200 text-indigo-700';
         }
     };
 
@@ -189,10 +196,10 @@ const FileUploader: React.FC<FileUploaderProps> = ({
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 className={`
-          relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all
+          relative border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300
           ${isDragging
-                        ? 'border-teal-500 bg-teal-50'
-                        : 'border-slate-200 hover:border-teal-300 hover:bg-slate-50'
+                        ? 'border-violet-500 bg-gradient-to-br from-violet-50 to-purple-50 scale-[1.02]'
+                        : 'border-violet-200 hover:border-violet-400 hover:bg-gradient-to-br hover:from-violet-50/50 hover:to-purple-50/50'
                     }
           ${isProcessing ? 'opacity-50 pointer-events-none' : ''}
         `}
@@ -206,56 +213,77 @@ const FileUploader: React.FC<FileUploaderProps> = ({
                     className="hidden"
                 />
 
-                <div className="flex flex-col items-center gap-3">
+                {/* Decorative background gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-violet-100/30 via-transparent to-pink-100/30 rounded-2xl pointer-events-none" />
+
+                <div className="relative flex flex-col items-center gap-4">
                     <div className={`
-            p-4 rounded-full transition-colors
-            ${isDragging ? 'bg-teal-100 text-teal-600' : 'bg-slate-100 text-slate-400'}
+            p-5 rounded-2xl transition-all duration-300 shadow-lg
+            ${isDragging
+                            ? 'bg-gradient-to-br from-violet-500 to-purple-600 text-white scale-110 shadow-violet-300'
+                            : 'bg-gradient-to-br from-violet-500 to-indigo-600 text-white shadow-violet-200'
+                        }
           `}>
-                        <Upload size={32} />
+                        <Upload size={28} strokeWidth={2.5} />
                     </div>
 
                     <div>
-                        <p className="font-bold text-slate-700">
-                            {isProcessing ? 'Đang xử lý...' : 'Kéo thả file vào đây'}
+                        <p className="font-bold text-lg bg-gradient-to-r from-violet-700 to-purple-700 bg-clip-text text-transparent">
+                            {isProcessing ? '⏳ Đang xử lý...' : '📤 Kéo thả file vào đây'}
                         </p>
-                        <p className="text-sm text-slate-500 mt-1">
-                            hoặc click để chọn file
+                        <p className="text-sm text-violet-500 mt-1 font-medium">
+                            hoặc click để chọn file từ máy tính
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap gap-2 justify-center mt-2">
-                        <span className="px-2 py-1 bg-blue-50 text-blue-600 text-xs font-medium rounded">Hình ảnh</span>
-                        <span className="px-2 py-1 bg-red-50 text-red-600 text-xs font-medium rounded">PDF</span>
-                        <span className="px-2 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded">Text</span>
+                    <div className="flex flex-wrap gap-2 justify-center mt-1">
+                        <span className="px-3 py-1.5 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-bold rounded-full shadow-sm shadow-pink-200">
+                            🖼️ Hình ảnh
+                        </span>
+                        <span className="px-3 py-1.5 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs font-bold rounded-full shadow-sm shadow-orange-200">
+                            📄 PDF
+                        </span>
+                        <span className="px-3 py-1.5 bg-gradient-to-r from-indigo-500 to-blue-500 text-white text-xs font-bold rounded-full shadow-sm shadow-indigo-200">
+                            📝 Text
+                        </span>
                     </div>
 
-                    <p className="text-xs text-slate-400">
-                        Tối đa {maxFiles} file, mỗi file ≤ {maxSizeMB}MB
+                    <p className="text-xs text-violet-400 font-medium">
+                        Tối đa {maxFiles} file • Mỗi file ≤ {maxSizeMB}MB
                     </p>
                 </div>
             </div>
 
             {/* Error Message */}
             {error && (
-                <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm">
-                    <AlertCircle size={16} />
+                <div className="flex items-center gap-2 p-4 bg-gradient-to-r from-red-50 to-rose-50 border border-red-200 rounded-xl text-red-600 text-sm font-medium shadow-sm">
+                    <AlertCircle size={18} className="shrink-0" />
                     <span>{error}</span>
                 </div>
             )}
 
             {/* File List */}
             {files.length > 0 && (
-                <div className="space-y-2">
-                    <p className="text-xs font-bold text-slate-500 uppercase">File đã tải ({files.length}/{maxFiles})</p>
+                <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                        <CheckCircle2 size={16} className="text-emerald-500" />
+                        <p className="text-xs font-bold text-emerald-600 uppercase tracking-wide">
+                            File đã tải ({files.length}/{maxFiles})
+                        </p>
+                    </div>
                     <div className="grid gap-2">
                         {files.map((file, index) => (
                             <div
                                 key={index}
-                                className="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-lg group hover:border-slate-200"
+                                className={`
+                  flex items-center justify-between p-4 rounded-xl border-2 group transition-all duration-200
+                  hover:shadow-md hover:scale-[1.01]
+                  ${getFileTypeColor(file.type)}
+                `}
                             >
-                                <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-4">
                                     {file.type === 'image' ? (
-                                        <div className="w-10 h-10 rounded bg-slate-100 overflow-hidden">
+                                        <div className="w-14 h-14 rounded-xl bg-white shadow-sm overflow-hidden border-2 border-white">
                                             <img
                                                 src={`data:${file.mimeType};base64,${file.content}`}
                                                 alt={file.name}
@@ -263,23 +291,29 @@ const FileUploader: React.FC<FileUploaderProps> = ({
                                             />
                                         </div>
                                     ) : (
-                                        <div className="w-10 h-10 rounded bg-slate-50 flex items-center justify-center">
+                                        <div className={`
+                      w-14 h-14 rounded-xl flex items-center justify-center shadow-sm
+                      ${file.type === 'pdf' ? 'bg-gradient-to-br from-orange-100 to-amber-100' : 'bg-gradient-to-br from-indigo-100 to-blue-100'}
+                    `}>
                                             {getFileIcon(file.type)}
                                         </div>
                                     )}
                                     <div>
-                                        <p className="text-sm font-medium text-slate-700 truncate max-w-[200px]">
+                                        <p className="text-sm font-bold truncate max-w-[200px]">
                                             {file.name}
                                         </p>
-                                        <p className="text-xs text-slate-400 capitalize">{file.type}</p>
+                                        <p className="text-xs font-medium opacity-70 capitalize flex items-center gap-1">
+                                            <Sparkles size={10} />
+                                            {file.type === 'image' ? 'Hình ảnh' : file.type === 'pdf' ? 'Tài liệu PDF' : 'Văn bản'}
+                                        </p>
                                     </div>
                                 </div>
 
                                 <button
                                     onClick={() => removeFile(index)}
-                                    className="p-1.5 rounded-full text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100"
+                                    className="p-2 rounded-full text-current opacity-50 hover:opacity-100 hover:bg-white/50 transition-all"
                                 >
-                                    <X size={16} />
+                                    <X size={18} />
                                 </button>
                             </div>
                         ))}
