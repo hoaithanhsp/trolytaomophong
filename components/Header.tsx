@@ -8,7 +8,7 @@ interface HeaderProps {
   onViewChange: (view: 'search' | 'library') => void;
 }
 
-const BASE_VISIT_COUNT = 1000;
+const BASE_VISIT_COUNT = 1326;
 const VISIT_COUNT_KEY = 'app_visit_count';
 
 const Header: React.FC<HeaderProps> = ({ onOpenGuide, currentView, onViewChange }) => {
