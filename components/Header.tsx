@@ -1,5 +1,5 @@
-import React from 'react';
-import { Microscope, Bell, User, Settings } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Microscope, Bell, User, Settings, Eye } from 'lucide-react';
 import { useSettings } from '../contexts/SettingsContext';
 
 interface HeaderProps {
@@ -8,8 +8,23 @@ interface HeaderProps {
   onViewChange: (view: 'search' | 'library') => void;
 }
 
+const BASE_VISIT_COUNT = 1000;
+const VISIT_COUNT_KEY = 'app_visit_count';
+
 const Header: React.FC<HeaderProps> = ({ onOpenGuide, currentView, onViewChange }) => {
   const { apiKey, setIsSettingsOpen } = useSettings();
+  const [visitCount, setVisitCount] = useState<number>(0);
+
+  useEffect(() => {
+    // Lấy số lượt truy cập từ localStorage
+    const storedCount = localStorage.getItem(VISIT_COUNT_KEY);
+    const currentCount = storedCount ? parseInt(storedCount, 10) : 0;
+
+    // Tăng số lượt truy cập
+    const newCount = currentCount + 1;
+    localStorage.setItem(VISIT_COUNT_KEY, newCount.toString());
+    setVisitCount(newCount);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-teal-100 px-4 md:px-10 py-3 shadow-sm">
@@ -49,6 +64,15 @@ const Header: React.FC<HeaderProps> = ({ onOpenGuide, currentView, onViewChange 
         </nav>
 
         <div className="flex items-center gap-4">
+          {/* Hiển thị số lượt truy cập */}
+          <div className="hidden sm:flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-100 rounded-xl">
+            <Eye size={18} className="text-[#0D9488]" />
+            <span className="text-sm font-bold text-[#0D9488]">
+              {(BASE_VISIT_COUNT + visitCount).toLocaleString('vi-VN')}
+            </span>
+            <span className="text-xs text-teal-600/70">lượt truy cập</span>
+          </div>
+
           <button
             onClick={() => setIsSettingsOpen(true)}
             className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${!apiKey ? 'bg-red-50 text-red-600 border border-red-200' : 'text-slate-500 hover:bg-slate-100'}`}
